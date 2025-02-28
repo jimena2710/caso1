@@ -1,0 +1,6 @@
+//clase enum
+public enum Condicion {
+    NUEVO,
+    USADO,
+    REMANUFACTURADO
+}
