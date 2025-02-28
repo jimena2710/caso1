@@ -1,1 +1,13 @@
 
+public abstract class Producto {
+
+   int codigo;
+   String nombre;
+   String descripcion;
+   double precioCosto;
+   double precioVenta;
+   boolean altaPrioridad;
+
+   Condicion condicion; //llamar al enum
+
+  public abstract double calcularPrecioVenta ();//metodo para calcular el precio
