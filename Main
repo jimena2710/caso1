@@ -1,0 +1,63 @@
+
+import javax.swing.*;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.*;
+import java.awt.event.ActionListener;
+
+
+public class Caso1 {
+ArrayList<Producto> productos= new ArrayList<>();
+private JSpinner codigo;
+private JCheckBox altaPrioridad;
+private JComboBox<Condicion> condicion;
+private JTextField txtNombre, txtPrecioCosto;
+private JTextArea descripcion;
+private static final long serialVersionUID = 1L;
+
+public Caso1(){
+//pantalla
+setTitle("Gestion de Productos");
+setSize(800, 600);
+setDefaultCloseOperation(EXIT_ON_CLOSE);
+setLayout(new BorderLayout(10, 10)); // campo entre componentes
+
+//codigo (JSpinner)
+add(new JLabel("Código:"));
+SpinnerModel modeloCodigo = new SpinnerNumberModel(1, 1, 1000, 1);//valor Inicial, valor Minimo, valor Maximo, incremento de 1 en 1
+codigo = new JSpinner(modeloCodigo);
+add(codigo); 
+
+// nombre del producto (JTextField)
+add(new JLabel("Nombre:"));
+txtNombre = new JTextField();
+add(txtNombre);
+
+// precio de venta (JTextField)
+add(new JLabel("Precio de Venta:"));
+txtPrecioCosto = new JTextField();
+add(txtPrecioCosto);
+
+//condicion (JComboBox)
+add(new JLabel("Condición:"));
+condicion = new JComboBox<>(Condicion.values());
+add(condicion);
+
+
+
+
+
+
+
+
+
+public static void main(String[] args) {
+SwingUtilities.invokeLater(() -> {//invocador de la ventana
+Caso1 ventana= new Caso1();//creando el objeto
+ventana.setVisible(true); //diciendo que la ventana es visible
+System.out.println("Iniciando ventana");      
+    });
+                  
+             
+    }
+}
