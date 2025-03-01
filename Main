@@ -16,6 +16,7 @@ private JTextArea descripcion;
 private static final long serialVersionUID = 1L;
 
 public Caso1(){
+
 //pantalla
 setTitle("Gestion de Productos");
 setSize(800, 600);
@@ -33,8 +34,8 @@ add(new JLabel("Nombre:"));
 txtNombre = new JTextField();
 add(txtNombre);
 
-// precio de venta (JTextField)
-add(new JLabel("Precio de Venta:"));
+// precio de costo (JTextField)
+add(new JLabel("Precio de costo:"));
 txtPrecioCosto = new JTextField();
 add(txtPrecioCosto);
 
@@ -43,6 +44,7 @@ add(new JLabel("Condición:"));
 condicion = new JComboBox<>(Condicion.values());
 add(condicion);
 
+//descripcion (JTextArea)
 
 
 
