@@ -46,9 +46,35 @@ add(condicion);
 
 //descripcion (JTextArea)
 
+// tipo producto (RadioButton)
+ add(new JLabel("Tipo de Producto:"));
+ electronico = new JRadioButton("Electrónico");
+ ropa = new JRadioButton("Ropa");
+ ButtonGroup tipoProducto = new ButtonGroup(); //se agrupa para permitir solo una elección
+ tipoProducto.add(electronico);
+ tipoProducto.add(ropa);   
 
+//agregar los tipos de productos al panel
+ JPanel panelProducto = new JPanel();
+ panelProducto.add(electronico);
+ panelProducto.add(ropa);
+ add(panelProducto);
 
+// Botones para agregar y reportar producto
+ botonAgregar = new JButton("Agregar Producto");
+ botonReportar= new JButton("Reportar Producto");
+ add(botonAgregar);
+ add(botonAgregar);
 
+ // Modelo de tabla para mostrar productos
+tablaDescripcion = new DefaultTableModel();
+tablaDescripcion.addColumn("Código");
+tablaDescripcion.addColumn("Nombre");
+tablaDescripcion.addColumn("Precio de Venta");
+tablaDescripcion.addColumn("Condición");
+tablaDescripcion.addColumn("Tipo");
+
+ 
 
 
 
