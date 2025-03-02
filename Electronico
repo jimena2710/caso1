@@ -1,0 +1,18 @@
+abstract class Electronico extends Producto {
+    public Electronico(int codigo, String nombre, double precioCosto, boolean altaPrioridad) {
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.precioCosto = precioCosto;
+        this.altaPrioridad = altaPrioridad;
+        this.precioVenta = calcularPrecioVenta();
+    }
+
+    @Override
+    public double calcularPrecioVenta() {
+        double margen = 0.15; // 15% de ganancia base
+        if (altaPrioridad) {
+            margen += 0.10; // +10% si es de alta prioridad
+        }
+        return precioCosto * (1 + margen);
+    }
+}
