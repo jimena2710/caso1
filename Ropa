@@ -1,0 +1,20 @@
+abstract class Ropa extends Producto {
+    public Ropa(int codigo, String nombre, double precioCosto, Condicion condicion) {
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.precioCosto = precioCosto;
+        this.condicion = condicion;
+        this.precioVenta = calcularPrecioVenta();
+    }
+
+    @Override
+    public double calcularPrecioVenta() {
+        double comision = 0;
+        switch (condicion) {
+            case NUEVO -> comision = 0.05; // 5% si es NUEVO
+            case USADO -> comision = 0.03; // 3% si es USADO
+            case REMANUFACTURADO -> comision = 0.02; // 2% si es REMANUFACTURADO
+        }
+        return precioCosto * (1 + comision);
+    }
+}
