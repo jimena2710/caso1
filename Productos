@@ -1,7 +1,5 @@
-
-public abstract class Producto {
-
-   int codigo;
+abstract class Producto {
+    int codigo;
    String nombre;
    String descripcion;
    double precioCosto;
@@ -11,3 +9,5 @@ public abstract class Producto {
    Condicion condicion; //llamar al enum
 
   public abstract double calcularPrecioVenta ();//metodo para calcular el precio
+}
+
