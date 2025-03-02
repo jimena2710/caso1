@@ -1,91 +1,174 @@
-
 import javax.swing.*;
-import java.util.ArrayList;
-import java.awt.event.ActionEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+import javax.swing.table.DefaultTableModel;
 
+public class Caso1 extends JFrame {
+    private ArrayList<Producto> productos = new ArrayList<>();
+    private JSpinner codigo;
+    private JCheckBox altaPrioridad;
+    private JComboBox<Condicion> condicion;
+    private JTextField txtNombre, txtPrecioCosto;
+    private JTextArea descripcion;
+    private JRadioButton electronico, ropa;
+    private JButton botonAgregar, botonReportar;
+    private DefaultTableModel tablaDescripcion;
+    private JTable tabla;
 
-public class Caso1 {
-ArrayList<Producto> productos= new ArrayList<>();
-private JSpinner codigo;
-private JCheckBox altaPrioridad;
-private JComboBox<Condicion> condicion;
-private JTextField txtNombre, txtPrecioCosto;
-private JTextArea descripcion;
-private static final long serialVersionUID = 1L;
+    public Caso1() {
+        setTitle("Gestión de Productos");
+        setSize(800, 600);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new GridLayout(0, 2, 10, 10));
 
-public Caso1(){
+        // Código (JSpinner)
+        add(new JLabel("Código:"));
+        SpinnerModel modeloCodigo = new SpinnerNumberModel(1, 1, 1000, 1);
+        codigo = new JSpinner(modeloCodigo);
+        add(codigo);
 
-//pantalla
-setTitle("Gestion de Productos");
-setSize(800, 600);
-setDefaultCloseOperation(EXIT_ON_CLOSE);
-setLayout(new BorderLayout(10, 10)); // campo entre componentes
+        // Nombre del producto (JTextField)
+        add(new JLabel("Nombre:"));
+        txtNombre = new JTextField();
+        add(txtNombre);
 
-//codigo (JSpinner)
-add(new JLabel("Código:"));
-SpinnerModel modeloCodigo = new SpinnerNumberModel(1, 1, 1000, 1);//valor Inicial, valor Minimo, valor Maximo, incremento de 1 en 1
-codigo = new JSpinner(modeloCodigo);
-add(codigo); 
+        // Precio de costo (JTextField)
+        add(new JLabel("Precio de costo:"));
+        txtPrecioCosto = new JTextField();
+        add(txtPrecioCosto);
 
-// nombre del producto (JTextField)
-add(new JLabel("Nombre:"));
-txtNombre = new JTextField();
-add(txtNombre);
+        // Condición (JComboBox)
+        add(new JLabel("Condición:"));
+        condicion = new JComboBox<>(Condicion.values());
+        add(condicion);
 
-// precio de costo (JTextField)
-add(new JLabel("Precio de costo:"));
-txtPrecioCosto = new JTextField();
-add(txtPrecioCosto);
+        // Tipo de producto (RadioButton)
+        add(new JLabel("Tipo de Producto:"));
+        electronico = new JRadioButton("Electrónico");
+        ropa = new JRadioButton("Ropa");
+        ButtonGroup tipoProducto = new ButtonGroup();
+        tipoProducto.add(electronico);
+        tipoProducto.add(ropa);
 
-//condicion (JComboBox)
-add(new JLabel("Condición:"));
-condicion = new JComboBox<>(Condicion.values());
-add(condicion);
+        // Panel para los botones de tipo de producto
+        JPanel panelProducto = new JPanel();
+        panelProducto.add(electronico);
+        panelProducto.add(ropa);
+        add(panelProducto);
 
-//descripcion (JTextArea)
+        // CheckBox de Alta Prioridad
+        altaPrioridad = new JCheckBox("Alta Prioridad");
+        add(altaPrioridad);
 
-// tipo producto (RadioButton)
- add(new JLabel("Tipo de Producto:"));
- electronico = new JRadioButton("Electrónico");
- ropa = new JRadioButton("Ropa");
- ButtonGroup tipoProducto = new ButtonGroup(); //se agrupa para permitir solo una elección
- tipoProducto.add(electronico);
- tipoProducto.add(ropa);   
+        // Botones para agregar y reportar producto
+        botonAgregar = new JButton("Agregar Producto");
+        botonReportar = new JButton("Reportar Producto");
+        add(botonAgregar);
+        add(botonReportar);
 
-//agregar los tipos de productos al panel
- JPanel panelProducto = new JPanel();
- panelProducto.add(electronico);
- panelProducto.add(ropa);
- add(panelProducto);
+        // Modelo de tabla para mostrar productos
+        tablaDescripcion = new DefaultTableModel();
+        tablaDescripcion.addColumn("Código");
+        tablaDescripcion.addColumn("Nombre");
+        tablaDescripcion.addColumn("Precio de Venta");
+        tablaDescripcion.addColumn("Condición");
+        tablaDescripcion.addColumn("Tipo");
 
-// Botones para agregar y reportar producto
- botonAgregar = new JButton("Agregar Producto");
- botonReportar= new JButton("Reportar Producto");
- add(botonAgregar);
- add(botonAgregar);
+        tabla = new JTable(tablaDescripcion);
+        JScrollPane scrollPane = new JScrollPane(tabla);
+        add(scrollPane);
 
- // Modelo de tabla para mostrar productos
-tablaDescripcion = new DefaultTableModel();
-tablaDescripcion.addColumn("Código");
-tablaDescripcion.addColumn("Nombre");
-tablaDescripcion.addColumn("Precio de Venta");
-tablaDescripcion.addColumn("Condición");
-tablaDescripcion.addColumn("Tipo");
+        // Acción del botón "Agregar Producto"
+        botonAgregar.addActionListener(this::agregarProducto);
 
- 
+        // Acción del botón "Reportar Producto"
+        botonReportar.addActionListener(this::generarReporte);
+    }
 
+    private void agregarProducto(ActionEvent e) {
+        try {
+            int cod = (int) codigo.getValue();
+            String nombre = txtNombre.getText();
+            double precioCosto = Double.parseDouble(txtPrecioCosto.getText());
 
+            Producto producto = null;
+            if (electronico.isSelected()) {
+                boolean esAltaPrioridad = altaPrioridad.isSelected();
+                producto = new Electronico(cod, nombre, precioCosto, esAltaPrioridad) {};
+            } else if (ropa.isSelected()) {
+                Condicion cond = (Condicion) condicion.getSelectedItem();
+                producto = new Ropa(cod, nombre, precioCosto, cond) {};
+            }
 
+            if (producto != null) {
+                productos.add(producto);
+                tablaDescripcion.addRow(new Object[]{
+                        producto.codigo,
+                        producto.nombre,
+                        String.format("$%.2f", producto.calcularPrecioVenta()),
+                        producto instanceof Ropa ? ((Ropa) producto).condicion : "N/A",
+                        producto instanceof Electronico ? "Electrónico" : "Ropa"
+                });
+                JOptionPane.showMessageDialog(this, "Producto agregado exitosamente.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Seleccione un tipo de producto.");
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Ingrese un precio válido.");
+        }
+    }
 
-public static void main(String[] args) {
-SwingUtilities.invokeLater(() -> {//invocador de la ventana
-Caso1 ventana= new Caso1();//creando el objeto
-ventana.setVisible(true); //diciendo que la ventana es visible
-System.out.println("Iniciando ventana");      
-    });
-                  
-             
+    // Método para generar el reporte en un archivo .txt
+    private void generarReporte(ActionEvent e) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("reporte_productos.txt"))) {
+            writer.println("===== REPORTE DE PRODUCTOS =====\n");
+
+            // Separar los productos por tipo
+            ArrayList<Producto> electronicos = new ArrayList<>();
+            ArrayList<Producto> ropas = new ArrayList<>();
+
+            for (Producto p : productos) {
+                if (p instanceof Electronico) {
+                    electronicos.add(p);
+                } else if (p instanceof Ropa) {
+                    ropas.add(p);
+                }
+            }
+
+            // Escribir productos electrónicos
+            writer.println(" ELECTRÓNICOS ");
+            for (Producto p : electronicos) {
+                writer.printf("Código: %d | Nombre: %s | Precio Venta: $%.2f | Condición: %s | Alta Prioridad: %s\n",
+                        p.codigo, p.nombre, p.calcularPrecioVenta(), p.condicion, p.altaPrioridad ? "Sí" : "No");
+            }
+
+            // Escribir productos de ropa
+            writer.println("\n ROPA ");
+            for (Producto p : ropas) {
+                writer.printf("Código: %d | Nombre: %s | Precio Venta: $%.2f | Condición: %s\n",
+                        p.codigo, p.nombre, p.calcularPrecioVenta(), p.condicion);
+            }
+
+            JOptionPane.showMessageDialog(this, "Reporte generado exitosamente: reporte_productos.txt");
+
+        } catch (IOException ex) {
+            Logger.getLogger(Caso1.class.getName()).log(Level.SEVERE, null, ex);
+        }    
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            Caso1 ventana = new Caso1();
+            ventana.setVisible(true);
+            System.out.println("Iniciando ventana");
+        });
     }
 }
